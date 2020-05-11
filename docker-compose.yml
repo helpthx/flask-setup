@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  # Postgres Development
+  db_postgres:
+    restart: always
+    image: postgres:11
+    container_name: db_postgres
+    environment:
+      - POSTGRES_PASSWORD=${PG_PASS}
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - postgres_network
+
+  flask_dev:
+    # Flask container for development with PostgreSQl testing
+    container_name: flask_dev
+    restart: always
+    build: .
+    links:
+      - db_postgres
+    depends_on:
+      - db_postgres
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/abin_api/
+    command: python wsgi.py
+    networks:
+      - postgres_network
+
+  flask_prod:
+    # Flask Production container with Gunicorn
+    container_name: flask_prod
+    restart: always
+    build: .
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/abin_api/
+    command: . run.sh
+
+volumes:
+  postgres_data:
+
+networks:
+  postgres_network:
+    driver: bridge
