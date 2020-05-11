@@ -48,7 +48,7 @@ jobs:
       run: pycodestyle . --max-line-length=120
 
     - name: Building containers
-      run: make build
+      run: make build-all
 
     - name: Run Flask Unit Test
       run: test-dev
