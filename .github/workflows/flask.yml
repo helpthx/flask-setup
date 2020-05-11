@@ -1,0 +1,54 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  CI:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+
+    - shell: bash
+      env:
+        # PG_PASS: ${{ secrets.PG_PASS }}
+        # API_DB_USER: ${{ secrets.API_DB_USER }}
+        # API_DB_PASS: ${{ secrets.API_DB_PASS }}
+        # API_DB_DATABASE: ${{ secrets.API_DB_DATABASE }}
+        # DATABASE_URL: postgres://${{ secrets.API_DB_USER }}:${{ secrets.API_DB_PASS }}@db_postgres:5432/${{ secrets.API_DB_DATABASE }}
+        PG_PASS: password
+
+      run: |
+          echo PG_PASS="$PG_PASS" >> .env
+
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+
+    - name: Installing Python Linter PEP8
+      run: |
+        pip install pycodestyle
+
+    - name: Run Linter PEP8 Style COde
+      run: pycodestyle . --max-line-length=120
+
+    - name: Building containers
+      run: make build
+
+    - name: Run Flask Unit Test
+      run: test-dev
