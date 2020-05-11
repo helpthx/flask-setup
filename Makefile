@@ -45,3 +45,6 @@ run-dev:
 
 test-dev:
 	sudo docker-compose run --rm flask_dev python -m unittest discover .
+
+pep8:
+	sudo docker-compose run --rm flask_dev pycodestyle . --max-line-length=120
