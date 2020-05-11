@@ -51,4 +51,4 @@ jobs:
       run: make build-all
 
     - name: Run Flask Unit Test
-      run: test-dev
+      run: make test-dev
