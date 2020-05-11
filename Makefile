@@ -42,3 +42,6 @@ create-db:
 
 run-dev:
 	sudo docker-compose run --service-ports flask_dev
+
+test-dev:
+	sudo docker-compose run --rm flask_dev python -m unittest discover .

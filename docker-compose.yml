@@ -20,6 +20,7 @@ services:
     container_name: flask_dev
     restart: always
     build: .
+    image: flask_dev:development1.0
     links:
       - db_postgres
     depends_on:
